@@ -1,0 +1,33 @@
+---
+# tasks file for ansible-role-win-powershell-core
+
+- name: install powershell core
+  win_package:
+    path: '{{ powershell_core_download_url }}'
+    product_id: '{{ powershell_core_product_id }}'
+    state: present
+    arguments: '/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL={{ powershell_core_add_explorer_context_menu_openpowershell }} ENABLE_PSREMOTING={{ powershell_core_enable_psremoting }} REGISTER_MANIFEST={{ powershell_core_register_manifest }}'
+  ignore_errors: yes
+  register: powershell_core_install_result
+
+- name: Wait 60 seconds, but only start checking after 3 seconds
+  wait_for_connection:
+    delay: 3
+    timeout: 60
+  when: powershell_core_install_result.rc != 0
+
+- name: install powershell core (2nd try)
+  win_package:
+    path: '{{ powershell_core_download_url }}'
+    product_id: '{{ powershell_core_product_id }}'
+    state: present
+    arguments: '/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL={{ powershell_core_add_explorer_context_menu_openpowershell }} ENABLE_PSREMOTING={{ powershell_core_enable_psremoting }} REGISTER_MANIFEST={{ powershell_core_register_manifest }}'
+  register: powershell_core_install_result2
+  when: powershell_core_install_result.rc != 0
+
+- name: Test powershell core
+  win_shell: |
+    get-host
+  args:
+    executable: '{{ powershell_core_executable }}'
+  changed_when: False

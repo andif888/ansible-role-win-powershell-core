@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-role-win-powershell-core
+powershell_core_version: 7.1.0
+powershell_core_download_url: 'https://github.com/PowerShell/PowerShell/releases/download/v{{ powershell_core_version }}/PowerShell-{{ powershell_core_version }}-win-x64.msi'
+powershell_core_product_id: "{8B34F593-C5DF-47D9-AD0E-23D579F6D83E}"
+powershell_core_add_explorer_context_menu_openpowershell: 1
+powershell_core_enable_psremoting: 1
+powershell_core_register_manifest: 1
+powershell_core_executable: '{{ ansible_env.ProgramFiles }}\PowerShell\7\pwsh.exe'
