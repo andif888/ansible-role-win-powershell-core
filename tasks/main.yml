@@ -31,3 +31,12 @@
   args:
     executable: '{{ powershell_core_executable }}'
   changed_when: False
+
+- name: Set OpenSSH default shell to Powershell 7
+  win_regedit:
+    path: HKLM:\SOFTWARE\OpenSSH
+    name: DefaultShell
+    data: '{{ powershell_core_executable }}'
+    state: present
+  when: powershell_core_set_openssh_default_shell
+  notify: restart sshd
